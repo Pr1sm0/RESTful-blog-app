@@ -5,7 +5,7 @@ const express = require("express"),
       mongoose = require("mongoose"),
       app = express();
 
-//APP CONFIG
+// APP CONFIG
 mongoose.connect("mongodb://localhost/restful_blog_app", {useNewUrlParser: true, useUnifiedTopology: true});
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -15,7 +15,7 @@ app.use(expressSanitizer());
 
 mongoose.set('useFindAndModify', false);
 
-//MONGOOSE/MODEL CONFIG
+// MONGOOSE/MODEL CONFIG
 const blogSchema = new mongoose.Schema({
     title: String,
     image: String,
@@ -24,13 +24,13 @@ const blogSchema = new mongoose.Schema({
 });
 const Blog = mongoose.model("Blog", blogSchema);
 
-//RESTFUL ROUTES
+// RESTFUL ROUTES
 
 app.get("/", (req, res) => {
     res.redirect("/blogs");
 });
 
-//INDEX ROUTE
+// INDEX ROUTE
 app.get("/blogs", (req, res) => {
     Blog.find({}, (err, blogs) => {
         if(err){
@@ -41,12 +41,12 @@ app.get("/blogs", (req, res) => {
     });
 });
 
-//NEW ROUTE
+// NEW ROUTE
 app.get("/blogs/new", (req, res) => {
     res.render("new");
 });
 
-//CREATE ROUTE
+// CREATE ROUTE
 app.post("/blogs", (req, res) => {
     //create blog
     req.body.blog.body = req.sanitize(req.body.blog.body);
@@ -60,7 +60,7 @@ app.post("/blogs", (req, res) => {
     });
 });
 
-//SHOW ROUTE
+// SHOW ROUTE
 app.get("/blogs/:id", (req, res) => {
     Blog.findById(req.params.id, (err, foundBlog) => {
         if(err){
@@ -71,7 +71,7 @@ app.get("/blogs/:id", (req, res) => {
     });
 });
 
-//EDIT ROUTE
+// EDIT ROUTE
 app.get("/blogs/:id/edit", (req, res) => {
     Blog.findById(req.params.id, (err, foundBlog) => {
         if(err){
@@ -82,7 +82,7 @@ app.get("/blogs/:id/edit", (req, res) => {
     });
 });
 
-//UPDATE ROUTE
+// UPDATE ROUTE
 app.put("/blogs/:id", (req, res) => {
     req.body.blog.body = req.sanitize(req.body.blog.body);
     Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updateBlog) => {
@@ -94,7 +94,7 @@ app.put("/blogs/:id", (req, res) => {
     });
 });
 
-//DELETE ROUTE
+// DELETE ROUTE
 app.delete("/blogs/:id", (req, res) => {
     //destroy blog
     Blog.findByIdAndRemove(req.params.id, (err) => {
